@@ -13,12 +13,16 @@ import io.github.nthanhhai2909.taskmanagement.internal.domain.task.TaskID;
 import io.github.nthanhhai2909.taskmanagement.internal.domain.task.TaskPriority;
 import io.github.nthanhhai2909.taskmanagement.internal.domain.task.TaskStatus;
 import io.github.nthanhhai2909.taskmanagement.internal.domain.task.TaskTitle;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.Collections;
 
-
-
+@Service
 public class CreateTaskHandler {
     private final TaskRepository taskRepository;
     private final TransactionManager tx;
@@ -58,7 +62,17 @@ public class CreateTaskHandler {
                     .dueDate(TaskDueDate.of(command.getDueDate()))
                     .build();
             this.tx.required(() -> this.taskRepository.save(Collections.singletonList(task)));
-            return Result.fromTask(task);
+            return Result.builder()
+                    .id(task.id())
+                    .title(task.title())
+                    .description(task.description())
+                    .createdBy(task.createdBy())
+                    .createdAt(task.createdAt())
+                    .assignee(task.assignee())
+                    .priority(task.priority())
+                    .status(task.status())
+                    .dueDate(task.dueDate())
+                    .build();
         } catch (DomainException ex) {
             throw new DomainException(ex.code(), ex.getMessage());
         } catch (IllegalArgumentException ex) {
@@ -66,6 +80,10 @@ public class CreateTaskHandler {
         }
     }
 
+    @NoArgsConstructor
+    @AllArgsConstructor
+    @Builder
+    @Getter
     public static final class Command {
         private String title;
         private String description;
@@ -74,71 +92,13 @@ public class CreateTaskHandler {
         private String priority;
         private String status;
         private LocalDateTime dueDate;
-
-        public Command() {
-        }
-
-        public String getTitle() {
-            return title;
-        }
-
-        public void setTitle(String title) {
-            this.title = title;
-        }
-
-        public String getDescription() {
-            return description;
-        }
-
-        public void setDescription(String description) {
-            this.description = description;
-        }
-
-        public String getCreatedBy() {
-            return createdBy;
-        }
-
-        public void setCreatedBy(String createdBy) {
-            this.createdBy = createdBy;
-        }
-
-        public String getAssignee() {
-            return assignee;
-        }
-
-        public void setAssignee(String assignee) {
-            this.assignee = assignee;
-        }
-
-        public String getPriority() {
-            return priority;
-        }
-
-        public void setPriority(String priority) {
-            this.priority = priority;
-        }
-
-        public String getStatus() {
-            return status;
-        }
-
-        public void setStatus(String status) {
-            this.status = status;
-        }
-
-        public LocalDateTime getDueDate() {
-            return dueDate;
-        }
-
-        public void setDueDate(LocalDateTime dueDate) {
-            this.dueDate = dueDate;
-        }
     }
 
+    @NoArgsConstructor
+    @AllArgsConstructor
+    @Getter
+    @Builder
     public static final class Result {
-        public Result() {
-        }
-
         private TaskID id;
         private TaskTitle title;
         private TaskDescription description;
@@ -148,91 +108,5 @@ public class CreateTaskHandler {
         private TaskPriority priority;
         private TaskStatus status;
         private TaskDueDate dueDate;
-
-        public static Result fromTask(Task task) {
-            Result result = new Result();
-            result.id = task.id();
-            result.title = task.title();
-            result.description = task.description();
-            result.createdBy = task.createdBy();
-            result.createdAt = task.createdAt();
-            result.assignee = task.assignee();
-            result.priority = task.priority();
-            result.status = task.status();
-            result.dueDate = task.dueDate();
-            return result;
-        }
-
-        public TaskID getId() {
-            return id;
-        }
-
-        public void setId(TaskID id) {
-            this.id = id;
-        }
-
-        public TaskTitle getTitle() {
-            return title;
-        }
-
-        public void setTitle(TaskTitle title) {
-            this.title = title;
-        }
-
-        public TaskDescription getDescription() {
-            return description;
-        }
-
-        public void setDescription(TaskDescription description) {
-            this.description = description;
-        }
-
-        public TaskCreatedBy getCreatedBy() {
-            return createdBy;
-        }
-
-        public void setCreatedBy(TaskCreatedBy createdBy) {
-            this.createdBy = createdBy;
-        }
-
-        public TaskCreatedAt getCreatedAt() {
-            return createdAt;
-        }
-
-        public void setCreatedAt(TaskCreatedAt createdAt) {
-            this.createdAt = createdAt;
-        }
-
-        public TaskAssignee getAssignee() {
-            return assignee;
-        }
-
-        public void setAssignee(TaskAssignee assignee) {
-            this.assignee = assignee;
-        }
-
-        public TaskPriority getPriority() {
-            return priority;
-        }
-
-        public void setPriority(TaskPriority priority) {
-            this.priority = priority;
-        }
-
-        public TaskStatus getStatus() {
-            return status;
-        }
-
-        public void setStatus(TaskStatus status) {
-            this.status = status;
-        }
-
-        public TaskDueDate getDueDate() {
-            return dueDate;
-        }
-
-        public void setDueDate(TaskDueDate dueDate) {
-            this.dueDate = dueDate;
-        }
     }
 }
