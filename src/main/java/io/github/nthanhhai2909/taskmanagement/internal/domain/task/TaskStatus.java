@@ -2,16 +2,30 @@ package io.github.nthanhhai2909.taskmanagement.internal.domain.task;
 
 import io.github.nthanhhai2909.taskmanagement.internal.domain.DomainException;
 import io.github.nthanhhai2909.taskmanagement.internal.domain.ValueObject;
+import org.apache.commons.lang3.StringUtils;
 
 public class TaskStatus implements ValueObject {
     public enum Status {
-        TODO, IN_PROGRESS, IN_REVIEW, BLOCKED, DONE, CANCELLED
+        TODO, IN_PROGRESS, IN_REVIEW, BLOCKED, DONE, CANCELLED, UNKNOWN
     }
 
     private final Status value;
 
     TaskStatus(Status value) {
         this.value = value;
+    }
+
+    public static TaskStatus fromString(String value) {
+        if (StringUtils.isBlank(value)) {
+            return TaskStatus.of(Status.UNKNOWN);
+        }
+
+        try {
+            return TaskStatus.of(Status.valueOf(value.trim().toUpperCase(java.util.Locale.ROOT)));
+        } catch (IllegalArgumentException ex) {
+            // do nothing
+        }
+        return TaskStatus.of(Status.UNKNOWN);
     }
 
     public static TaskStatus of(Status value) {
@@ -66,9 +80,17 @@ public class TaskStatus implements ValueObject {
         return Status.DONE.equals(this.value);
     }
 
+    public boolean isCancelled() {
+        return Status.CANCELLED.equals(this.value);
+    }
+
+    public boolean isUnknown() {
+        return Status.UNKNOWN.equals(this.value);
+    }
+
     @Override
     public void validate() throws DomainException {
-        if (this.value == null) {
+        if (this.isUnknown()) {
             throw new DomainException(
                     Error.TASK_STATUS_REQUIRED.code(),
                     Error.TASK_STATUS_REQUIRED.description()

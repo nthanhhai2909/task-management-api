@@ -94,7 +94,7 @@ public class Task implements AggregateRoot<TaskID> {
 
     public Optional<TaskCreatedEvent> createdEvent() {
         return this.events.stream()
-                .filter(e -> e instanceof TaskCreatedEvent)
+                .filter(TaskCreatedEvent.class::isInstance)
                 .map(e -> (TaskCreatedEvent) e)
                 .findFirst();
     }
@@ -122,7 +122,7 @@ public class Task implements AggregateRoot<TaskID> {
             this.task = new Task();
         }
 
-        public Builder builder() {
+        public static Builder builder() {
             return new Builder();
         }
 

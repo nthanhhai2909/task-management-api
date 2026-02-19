@@ -2,18 +2,32 @@ package io.github.nthanhhai2909.taskmanagement.internal.domain.task;
 
 import io.github.nthanhhai2909.taskmanagement.internal.domain.DomainException;
 import io.github.nthanhhai2909.taskmanagement.internal.domain.ValueObject;
+import org.apache.commons.lang3.StringUtils;
 
 import java.util.Locale;
 
 public final class TaskPriority implements ValueObject {
     public enum Priority {
-        LOW, MEDIUM, HIGH, CRITICAL
+        LOW, MEDIUM, HIGH, CRITICAL, UNKNOWN
     }
 
     private final Priority value;
 
     TaskPriority(Priority value) {
         this.value = value;
+    }
+
+    public static TaskPriority fromString(String value) {
+        if (StringUtils.isBlank(value)) {
+            return TaskPriority.of(Priority.UNKNOWN);
+        }
+
+        try {
+            return TaskPriority.of(Priority.valueOf(value.trim().toUpperCase(Locale.ROOT)));
+        } catch (IllegalArgumentException ex) {
+            // do nothing
+        }
+        return TaskPriority.of(Priority.UNKNOWN);
     }
 
     public static TaskPriority of(Priority value) {
@@ -64,9 +78,13 @@ public final class TaskPriority implements ValueObject {
         return Priority.CRITICAL.equals(this.value);
     }
 
+    public boolean isUnknown() {
+        return Priority.UNKNOWN.equals(this.value);
+    }
+
     @Override
     public void validate() throws DomainException {
-        if (this.value == null) {
+        if (this.isUnknown()) {
             throw new DomainException(
                     Error.TASK_PRIORITY_REQUIRED.code(),
                     Error.TASK_PRIORITY_REQUIRED.description()

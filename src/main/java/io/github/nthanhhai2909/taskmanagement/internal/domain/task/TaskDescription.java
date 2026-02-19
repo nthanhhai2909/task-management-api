@@ -8,6 +8,10 @@ public class TaskDescription implements ValueObject {
     private static final int MAX_LEN = 10000;
     private final String description;
 
+    public static TaskDescription of(String description) {
+        return new TaskDescription(description);
+    }
+
     TaskDescription(String description) {
         this.description = description;
     }

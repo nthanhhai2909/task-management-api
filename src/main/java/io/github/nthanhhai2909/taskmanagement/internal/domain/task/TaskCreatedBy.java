@@ -7,6 +7,10 @@ import org.apache.commons.lang3.StringUtils;
 public class TaskCreatedBy implements ValueObject {
     private final String userId;
 
+    public static TaskCreatedBy of(String userId) {
+        return new TaskCreatedBy(userId);
+    }
+
     TaskCreatedBy(String userId) {
         this.userId = userId;
     }
