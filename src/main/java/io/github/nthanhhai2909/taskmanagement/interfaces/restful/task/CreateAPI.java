@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.time.Instant;
-import java.time.ZoneId;
+import java.time.ZoneOffset;
 
 @RestController
 @RequestMapping("/tasks")
@@ -29,7 +29,7 @@ public class CreateAPI {
     }
 
     @PostMapping
-    public ResponseEntity<Response> create(@RequestBody Request req) {
+    public ResponseEntity<?> create(@RequestBody Request req) {
         try {
             CreateTaskHandler.Command command = new CreateTaskHandler.Command(
                     req.getTitle(),
@@ -38,7 +38,7 @@ public class CreateAPI {
                     req.getAssignee(),
                     req.getPriority(),
                     req.getStatus(),
-                    Instant.ofEpochMilli(req.getDueDate()).atZone(ZoneId.systemDefault()).toLocalDateTime()
+                    Instant.ofEpochMilli(req.getDueDate()).atZone(ZoneOffset.UTC).toLocalDateTime()
             );
             CreateTaskHandler.Result result = this.createTaskHandler.execute(command);
             return ResponseEntity
@@ -58,7 +58,10 @@ public class CreateAPI {
             log.error("Domain rule violation during task creation: {}", e.getMessage());
             return ResponseEntity
                     .status(HttpStatus.BAD_REQUEST)
-                    .body(null);
+                    .body(ErrorResponse.builder()
+                            .code(e.code())
+                            .message(e.description())
+                            .build());
         }
     }
 
@@ -74,6 +77,16 @@ public class CreateAPI {
         private String priority;
         private String status;
         private long dueDate;
+    }
+
+    @AllArgsConstructor
+    @NoArgsConstructor
+    @Getter
+    @Setter
+    @Builder
+    public static class ErrorResponse {
+        private String code;
+        private String message;
     }
 
     @AllArgsConstructor
