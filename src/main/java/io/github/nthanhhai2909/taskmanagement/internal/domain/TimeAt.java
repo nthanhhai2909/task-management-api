@@ -1,6 +1,8 @@
 package io.github.nthanhhai2909.taskmanagement.internal.domain;
 
+import java.time.Instant;
 import java.time.LocalDateTime;
+import java.time.ZoneOffset;
 
 public class TimeAt implements ValueObject {
     private final LocalDateTime time;
@@ -11,6 +13,10 @@ public class TimeAt implements ValueObject {
 
     public LocalDateTime time() {
         return this.time;
+    }
+
+    public Instant toInstant() {
+        return this.time == null ? null : this.time.toInstant(ZoneOffset.UTC);
     }
 
     public boolean isEmpty() {

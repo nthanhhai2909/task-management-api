@@ -193,4 +193,37 @@ public class Task implements AggregateRoot<TaskID> {
             return this.task;
         }
     }
+
+    // ------------------------------------ Reconstitution factory ------------------------------------
+    /**
+     * Reconstitute a Task aggregate from persisted state. No domain events are raised.
+     */
+    public static Task reconstitute(
+            TaskID id,
+            TaskTitle title,
+            TaskDescription description,
+            TaskCreatedBy createdBy,
+            TaskCreatedAt createdAt,
+            TaskAssignee assignee,
+            TaskPriority priority,
+            TaskStatus status,
+            TaskDueDate dueDate,
+            long version,
+            boolean deleted
+    ) {
+        Task t = new Task();
+        t.id = id;
+        t.taskTitle = title;
+        t.description = description;
+        t.createdBy = createdBy;
+        t.createdAt = createdAt;
+        t.assignee = assignee;
+        t.priority = priority;
+        t.status = status;
+        t.dueDate = dueDate;
+        t.events = new ArrayList<>(); // ensure no pending events
+        t.version = version;
+        t.deleted = deleted;
+        return t;
+    }
 }

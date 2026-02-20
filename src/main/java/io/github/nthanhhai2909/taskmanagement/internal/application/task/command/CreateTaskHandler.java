@@ -1,5 +1,6 @@
 package io.github.nthanhhai2909.taskmanagement.internal.application.task.command;
 
+import io.github.nthanhhai2909.taskmanagement.internal.application.db.GeneratedId;
 import io.github.nthanhhai2909.taskmanagement.internal.application.db.IDGenerator;
 import io.github.nthanhhai2909.taskmanagement.internal.application.db.TransactionManager;
 import io.github.nthanhhai2909.taskmanagement.internal.domain.DomainException;
@@ -17,12 +18,9 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.Collections;
-
-@Service
 public class CreateTaskHandler {
     private final TaskRepository taskRepository;
     private final TransactionManager tx;
@@ -50,8 +48,12 @@ public class CreateTaskHandler {
             if (command == null) {
                 throw new IllegalArgumentException("Command must not be null");
             }
+
+            // generate id pair (numeric + sid) from infra
+            GeneratedId gid = idGenerator.get();
+
             Task task = Task.Builder.builder()
-                    .id(TaskID.of(this.idGenerator.get()))
+                    .id(TaskID.of(gid.id(), gid.sid()))
                     .title(TaskTitle.of(command.getTitle()))
                     .description(TaskDescription.of(command.getDescription()))
                     .createdBy(TaskCreatedBy.of(command.getCreatedBy()))
@@ -61,7 +63,9 @@ public class CreateTaskHandler {
                     .status(TaskStatus.fromString(command.getStatus()))
                     .dueDate(TaskDueDate.of(command.getDueDate()))
                     .build();
+
             this.tx.required(() -> this.taskRepository.save(Collections.singletonList(task)));
+
             return Result.builder()
                     .id(task.id())
                     .title(task.title())

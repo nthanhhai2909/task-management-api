@@ -51,7 +51,7 @@ public class CreateAPI {
                             .assignee(result.getAssignee().stringValue())
                             .priority(result.getPriority().stringValue())
                             .status(result.getStatus().stringValue())
-                            .dueDate(result.getDueDate().toString())
+                            .dueDate(result.getDueDate().toEpochMilli())
                             .createdAt(result.getCreatedAt().toEpochMilli())
                             .build());
         } catch (DomainRuleViolationException e) {
@@ -89,7 +89,7 @@ public class CreateAPI {
         private String assignee;
         private String priority;
         private String status;
-        private String dueDate;
+        private Long dueDate;
         private Long createdAt;
     }
 }
