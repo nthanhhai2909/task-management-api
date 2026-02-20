@@ -3,8 +3,8 @@ spring:
     name: Task Management API
   datasource:
     url: jdbc:postgresql://localhost:5432/task_management
-    username: admin1
-    password: P@ssw0rd123
+    username: ${DB_USERNAME:admin1}
+    password: ${DB_PASSWORD}
     hikari:
       maximum-pool-size: 10       # default: 10
       minimum-idle: 5             # default: same as max

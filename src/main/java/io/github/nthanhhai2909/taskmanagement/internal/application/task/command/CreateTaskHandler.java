@@ -3,6 +3,7 @@ package io.github.nthanhhai2909.taskmanagement.internal.application.task.command
 import io.github.nthanhhai2909.taskmanagement.internal.application.db.GeneratedId;
 import io.github.nthanhhai2909.taskmanagement.internal.application.db.IDGenerator;
 import io.github.nthanhhai2909.taskmanagement.internal.application.db.TransactionManager;
+import io.github.nthanhhai2909.taskmanagement.internal.application.exception.DomainRuleViolationException;
 import io.github.nthanhhai2909.taskmanagement.internal.domain.DomainException;
 import io.github.nthanhhai2909.taskmanagement.internal.domain.task.Task;
 import io.github.nthanhhai2909.taskmanagement.internal.domain.task.TaskAssignee;
@@ -40,13 +41,12 @@ public class CreateTaskHandler {
      * Execute the command to create a new task.
      * @param command the command to create a new task
      * @return the result of the command execution, containing the created task's information
-     * @throws @IllegalArgumentException if the command is null
-     * @throws @DomainRuleViolationException if any domain rule is violated during task creation, such as missing required fields or invalid values
+     * @throws @DomainRuleViolationException if the command is null, or if any domain rule is violated during task creation, such as missing required fields or invalid values
      */
     public Result execute(Command command) {
         try {
             if (command == null) {
-                throw new IllegalArgumentException("Command must not be null");
+                throw new DomainRuleViolationException("command_required", "Command must not be null");
             }
 
             // generate id pair (numeric + sid) from infra
@@ -78,9 +78,7 @@ public class CreateTaskHandler {
                     .dueDate(task.dueDate())
                     .build();
         } catch (DomainException ex) {
-            throw new DomainException(ex.code(), ex.getMessage());
-        } catch (IllegalArgumentException ex) {
-            throw new IllegalArgumentException(ex.getMessage());
+            throw new DomainRuleViolationException(ex.code(), ex.description());
         }
     }
 
