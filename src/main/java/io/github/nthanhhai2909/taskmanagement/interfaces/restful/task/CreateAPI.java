@@ -2,6 +2,7 @@ package io.github.nthanhhai2909.taskmanagement.interfaces.restful.task;
 
 import io.github.nthanhhai2909.taskmanagement.internal.application.exception.DomainRuleViolationException;
 import io.github.nthanhhai2909.taskmanagement.internal.application.task.command.CreateTaskHandler;
+import io.github.nthanhhai2909.taskmanagement.interfaces.restful.common.ErrorResponse;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -16,7 +17,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.time.Instant;
-import java.time.ZoneId;
+import java.time.ZoneOffset;
 
 @RestController
 @RequestMapping("/tasks")
@@ -28,8 +29,12 @@ public class CreateAPI {
         this.createTaskHandler = createTaskHandler;
     }
 
+    /**
+     * Creates a new task.
+     * @return 201 with {@link Response} on success, or 400 with {@link io.github.nthanhhai2909.taskmanagement.interfaces.restful.common.ErrorResponse} on domain rule violation
+     */
     @PostMapping
-    public ResponseEntity<Response> create(@RequestBody Request req) {
+    public ResponseEntity<?> create(@RequestBody Request req) {
         try {
             CreateTaskHandler.Command command = new CreateTaskHandler.Command(
                     req.getTitle(),
@@ -38,7 +43,7 @@ public class CreateAPI {
                     req.getAssignee(),
                     req.getPriority(),
                     req.getStatus(),
-                    Instant.ofEpochMilli(req.getDueDate()).atZone(ZoneId.systemDefault()).toLocalDateTime()
+                    Instant.ofEpochMilli(req.getDueDate()).atZone(ZoneOffset.UTC).toLocalDateTime()
             );
             CreateTaskHandler.Result result = this.createTaskHandler.execute(command);
             return ResponseEntity
@@ -58,7 +63,10 @@ public class CreateAPI {
             log.error("Domain rule violation during task creation: {}", e.getMessage());
             return ResponseEntity
                     .status(HttpStatus.BAD_REQUEST)
-                    .body(null);
+                    .body(ErrorResponse.builder()
+                            .code(e.code())
+                            .message(e.description())
+                            .build());
         }
     }
 

@@ -3,6 +3,7 @@ package io.github.nthanhhai2909.taskmanagement.internal.application.task.command
 import io.github.nthanhhai2909.taskmanagement.internal.application.db.GeneratedId;
 import io.github.nthanhhai2909.taskmanagement.internal.application.db.IDGenerator;
 import io.github.nthanhhai2909.taskmanagement.internal.application.db.TransactionManager;
+import io.github.nthanhhai2909.taskmanagement.internal.application.exception.DomainRuleViolationException;
 import io.github.nthanhhai2909.taskmanagement.internal.domain.DomainException;
 import io.github.nthanhhai2909.taskmanagement.internal.domain.task.Task;
 import io.github.nthanhhai2909.taskmanagement.internal.domain.task.TaskAssignee;
@@ -78,9 +79,7 @@ public class CreateTaskHandler {
                     .dueDate(task.dueDate())
                     .build();
         } catch (DomainException ex) {
-            throw new DomainException(ex.code(), ex.getMessage());
-        } catch (IllegalArgumentException ex) {
-            throw new IllegalArgumentException(ex.getMessage());
+            throw new DomainRuleViolationException(ex.code(), ex.description());
         }
     }
 
