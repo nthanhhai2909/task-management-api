@@ -1,7 +1,9 @@
 package io.github.nthanhhai2909.taskmanagement.internal.domain.task;
 
 import io.github.nthanhhai2909.taskmanagement.internal.domain.*;
+import io.github.nthanhhai2909.taskmanagement.internal.domain.task.command.UpdateCommand;
 import io.github.nthanhhai2909.taskmanagement.internal.domain.task.event.TaskCreatedEvent;
+import io.github.nthanhhai2909.taskmanagement.internal.domain.task.event.TaskUpdatedEvent;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -101,8 +103,16 @@ public class Task implements AggregateRoot<TaskID> {
 
 
     // ----------------------------------- Validation methods ----------------------------------
+    /**
+     * Validate the aggregate. If any value object is invalid this method throws
+     * a DomainException describing the validation error.
+     *
+     * Note: `DomainException` is an unchecked (runtime) domain validation exception.
+     *
+     * @throws DomainException if validation fails
+     */
     @Override
-    public void validate() throws DomainException {
+    public void validate() {
         this.id.validate();
         this.taskTitle.validate();
         this.description.validate();
@@ -112,6 +122,60 @@ public class Task implements AggregateRoot<TaskID> {
         this.priority.validate();
         this.status.validate();
         this.dueDate.validate();
+    }
+
+    /**
+     * Apply the given domain update command to this aggregate.
+     * Only non-null fields in the command are applied; other fields are preserved.
+     * After applying changes the aggregate is validated and its version is incremented.
+     * A DomainException is thrown when validation fails.
+     *
+     * @param cmd the domain update command (may be null, in which case no changes are applied)
+     * @throws DomainException if validation fails after applying changes
+     */
+    public void update(UpdateCommand cmd) {
+        if (cmd == null) {
+            return;
+        }
+
+        // Apply only provided non-null values
+        if (cmd.getTitle() != null) {
+            this.taskTitle = cmd.getTitle();
+        }
+        if (cmd.getDescription() != null) {
+            this.description = cmd.getDescription();
+        }
+        if (cmd.getAssignee() != null) {
+            this.assignee = cmd.getAssignee();
+        }
+        if (cmd.getPriority() != null) {
+            this.priority = cmd.getPriority();
+        }
+        if (cmd.getStatus() != null) {
+            this.status = cmd.getStatus();
+        }
+        if (cmd.getDueDate() != null) {
+            this.dueDate = cmd.getDueDate();
+        }
+
+        // Validate aggregate after changes
+        this.validate();
+
+        // increment version
+        this.version = this.version + 1;
+
+        // raise updated event
+        TaskUpdatedEvent updatedEvent = new TaskUpdatedEvent();
+        updatedEvent.id(SID.random());
+        updatedEvent.occurredOn(LocalDateTime.now());
+        updatedEvent.taskId(this.id);
+        updatedEvent.taskTitle(this.taskTitle);
+        updatedEvent.taskDescription(this.description);
+        updatedEvent.taskAssignee(this.assignee);
+        updatedEvent.taskPriority(this.priority);
+        updatedEvent.taskStatus(this.status);
+        updatedEvent.taskDueDate(this.dueDate);
+        this.raise(updatedEvent);
     }
 
     // ------------------------------------------- Builder  -------------------------------------------
@@ -195,6 +259,7 @@ public class Task implements AggregateRoot<TaskID> {
     }
 
     // ------------------------------------ Reconstitution factory ------------------------------------
+
     /**
      * Reconstitute a Task aggregate from persisted state. No domain events are raised.
      */

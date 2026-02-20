@@ -32,7 +32,9 @@ public class GetTaskBySidHandler {
         }
 
         Optional<Task> taskOpt = taskRepository.findById(TaskID.of(sid));
-        if (taskOpt.isEmpty()) return null;
+        if (taskOpt.isEmpty()) {
+            return null;
+        }
 
         Task task = taskOpt.get();
 

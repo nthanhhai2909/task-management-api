@@ -1,7 +1,8 @@
 package io.github.nthanhhai2909.taskmanagement.internal.domain.task;
 
 public enum EventType {
-    TASK_CREATED("task-created", "Task created");
+    TASK_CREATED("task-created", "Task created"),
+    TASK_UPDATED("task-updated", "Task updated");
 
     EventType(String type, String description) {
         this.type = type;
@@ -19,4 +20,3 @@ public enum EventType {
         return description;
     }
 }
-

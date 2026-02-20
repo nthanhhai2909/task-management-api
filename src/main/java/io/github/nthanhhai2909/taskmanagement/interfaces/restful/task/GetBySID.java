@@ -19,12 +19,12 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/tasks")
-public class TaskQueryAPI {
-    private static final Logger log = LoggerFactory.getLogger(TaskQueryAPI.class);
+public class GetBySID {
+    private static final Logger log = LoggerFactory.getLogger(GetBySID.class);
 
     private final GetTaskBySidHandler handler;
 
-    public TaskQueryAPI(GetTaskBySidHandler handler) {
+    public GetBySID(GetTaskBySidHandler handler) {
         this.handler = handler;
     }
 
@@ -59,6 +59,7 @@ public class TaskQueryAPI {
         }
     }
 
+    // Response DTO for GET /tasks/{sid}
     @Builder
     @Getter
     @NoArgsConstructor

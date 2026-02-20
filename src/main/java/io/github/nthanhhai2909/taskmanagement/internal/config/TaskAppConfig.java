@@ -4,6 +4,7 @@ import io.github.nthanhhai2909.taskmanagement.internal.application.db.IDGenerato
 import io.github.nthanhhai2909.taskmanagement.internal.application.db.TransactionManager;
 import io.github.nthanhhai2909.taskmanagement.internal.application.task.command.CreateTaskHandler;
 import io.github.nthanhhai2909.taskmanagement.internal.application.task.command.TaskRepository;
+import io.github.nthanhhai2909.taskmanagement.internal.application.task.command.UpdateTaskHandler;
 import io.github.nthanhhai2909.taskmanagement.internal.application.task.query.GetTaskBySidHandler;
 import io.github.nthanhhai2909.taskmanagement.internal.infra.postgres.PostgresIDGenerator;
 import io.github.nthanhhai2909.taskmanagement.internal.infra.postgres.task.PostgresTaskRepository;
@@ -37,5 +38,10 @@ public class TaskAppConfig {
     @Bean
     public GetTaskBySidHandler getTaskBySidHandler(TaskRepository taskRepository) {
         return new GetTaskBySidHandler(taskRepository);
+    }
+
+    @Bean
+    public UpdateTaskHandler updateTaskHandler(TaskRepository taskRepository) {
+        return new UpdateTaskHandler(taskRepository);
     }
 }
