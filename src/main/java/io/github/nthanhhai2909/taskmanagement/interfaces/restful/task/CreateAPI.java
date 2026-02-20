@@ -2,6 +2,7 @@ package io.github.nthanhhai2909.taskmanagement.interfaces.restful.task;
 
 import io.github.nthanhhai2909.taskmanagement.internal.application.exception.DomainRuleViolationException;
 import io.github.nthanhhai2909.taskmanagement.internal.application.task.command.CreateTaskHandler;
+import io.github.nthanhhai2909.taskmanagement.interfaces.restful.common.ErrorResponse;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -28,6 +29,10 @@ public class CreateAPI {
         this.createTaskHandler = createTaskHandler;
     }
 
+    /**
+     * Creates a new task.
+     * @return 201 with {@link Response} on success, or 400 with {@link io.github.nthanhhai2909.taskmanagement.interfaces.restful.common.ErrorResponse} on domain rule violation
+     */
     @PostMapping
     public ResponseEntity<?> create(@RequestBody Request req) {
         try {
