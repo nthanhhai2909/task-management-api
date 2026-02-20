@@ -5,30 +5,28 @@ import io.github.nthanhhai2909.taskmanagement.internal.domain.TimeAt;
 import io.github.nthanhhai2909.taskmanagement.internal.domain.ValueObject;
 
 import java.time.Instant;
-import java.time.LocalDateTime;
-import java.time.ZoneOffset;
 
 public class TaskDueDate extends TimeAt implements ValueObject {
-    TaskDueDate(LocalDateTime time) {
+    TaskDueDate(Instant time) {
         super(time);
     }
 
-    public static TaskDueDate of(LocalDateTime time) {
+    public static TaskDueDate of(Instant time) {
         return new TaskDueDate(time);
     }
 
     public static TaskDueDate ofEpochMilli(long epochMilli) {
-        LocalDateTime time = LocalDateTime.ofInstant(Instant.ofEpochMilli(epochMilli), ZoneOffset.UTC);
+        Instant time = Instant.ofEpochMilli(epochMilli);
         return new TaskDueDate(time);
     }
 
     public static TaskDueDate ofEpochSecond(long epochSecond) {
-        LocalDateTime time = LocalDateTime.ofInstant(Instant.ofEpochSecond(epochSecond), ZoneOffset.UTC);
+        Instant time = Instant.ofEpochSecond(epochSecond);
         return new TaskDueDate(time);
     }
 
     public static TaskDueDate now() {
-        return new TaskDueDate(LocalDateTime.now());
+        return new TaskDueDate(Instant.now());
     }
 
     @Override

@@ -88,6 +88,14 @@ public class TaskStatus implements ValueObject {
         return Status.UNKNOWN.equals(this.value);
     }
 
+    public boolean isEmpty() {
+        return this.value == null;
+    }
+
+    public boolean isNotEmpty() {
+        return !this.isEmpty();
+    }
+
     @Override
     public void validate() throws DomainException {
         if (this.isUnknown()) {

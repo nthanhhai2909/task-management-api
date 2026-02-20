@@ -4,6 +4,7 @@ import io.github.nthanhhai2909.taskmanagement.internal.application.task.command.
 import io.github.nthanhhai2909.taskmanagement.internal.domain.task.Task;
 import io.github.nthanhhai2909.taskmanagement.internal.domain.task.TaskID;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.util.CollectionUtils;
 
 import java.sql.Timestamp;
 import java.util.ArrayList;
@@ -58,7 +59,7 @@ public class PostgresTaskRepository implements TaskRepository {
 
     @Override
     public void save(List<Task> tasks) {
-        if (tasks == null || tasks.isEmpty()) {
+        if (CollectionUtils.isEmpty(tasks)) {
             return;
         }
 
@@ -94,15 +95,15 @@ public class PostgresTaskRepository implements TaskRepository {
 
     @Override
     public Optional<Task> findById(TaskID id) {
-        if (id == null || (id.id() == null && (id.sid() == null || id.sid().isEmpty()))) {
+        if (id == null || (id.lid() == null && (id.sid() == null || id.sid().isEmpty()))) {
             return Optional.empty();
         }
 
         // prefer lookup by numeric id when available
         try {
             List<TaskRecord> results;
-            if (id.id() != null) {
-                results = jdbcTemplate.query(SELECT_BY_ID_SQL, mapper, id.id());
+            if (id.lid() != null) {
+                results = jdbcTemplate.query(SELECT_BY_ID_SQL, mapper, id.lid());
             } else {
                 results = jdbcTemplate.query(SELECT_BY_SID_SQL, mapper, id.sid());
             }

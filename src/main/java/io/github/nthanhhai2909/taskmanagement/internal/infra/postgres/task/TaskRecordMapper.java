@@ -1,6 +1,15 @@
 package io.github.nthanhhai2909.taskmanagement.internal.infra.postgres.task;
 
-import io.github.nthanhhai2909.taskmanagement.internal.domain.task.*;
+import io.github.nthanhhai2909.taskmanagement.internal.domain.task.Task;
+import io.github.nthanhhai2909.taskmanagement.internal.domain.task.TaskAssignee;
+import io.github.nthanhhai2909.taskmanagement.internal.domain.task.TaskCreatedAt;
+import io.github.nthanhhai2909.taskmanagement.internal.domain.task.TaskCreatedBy;
+import io.github.nthanhhai2909.taskmanagement.internal.domain.task.TaskDescription;
+import io.github.nthanhhai2909.taskmanagement.internal.domain.task.TaskDueDate;
+import io.github.nthanhhai2909.taskmanagement.internal.domain.task.TaskID;
+import io.github.nthanhhai2909.taskmanagement.internal.domain.task.TaskPriority;
+import io.github.nthanhhai2909.taskmanagement.internal.domain.task.TaskStatus;
+import io.github.nthanhhai2909.taskmanagement.internal.domain.task.TaskTitle;
 import org.springframework.jdbc.core.RowMapper;
 
 import java.sql.ResultSet;
@@ -9,22 +18,21 @@ import java.time.Instant;
 
 public class TaskRecordMapper implements RowMapper<TaskRecord> {
 
-    public TaskRecordMapper() {}
+    public TaskRecordMapper() {
+    }
 
     public TaskRecord toRecord(Task task) {
         TaskRecord e = new TaskRecord();
-        if (task.id() != null && task.id().id() != null) {
-            e.setId(task.id().id());
-        }
+        e.setId(task.id().lid());
         e.setSid(task.id().sid());
         e.setTitle(task.title().stringValue());
-        e.setDescription(task.description() == null ? null : task.description().stringValue());
+        e.setDescription(task.description().stringValue());
         e.setCreatedBy(task.createdBy().stringValue());
-        e.setCreatedAt(task.createdAt() == null ? Instant.now() : task.createdAt().toInstant());
-        if (task.assignee() != null) e.setAssignee(task.assignee().stringValue());
-        e.setPriority(task.priority() == null ? null : task.priority().stringValue());
-        e.setStatus(task.status() == null ? null : task.status().stringValue());
-        e.setDueDate(task.dueDate() == null ? null : task.dueDate().toInstant());
+        e.setCreatedAt(task.createdAt().isEmpty() ? Instant.now() : task.createdAt().toInstant());
+        e.setAssignee(task.assignee().stringValue());
+        e.setPriority(task.priority().stringValue());
+        e.setStatus(task.status().stringValue());
+        e.setDueDate(task.dueDate().toInstant());
         e.setVersion(task.version());
         e.setDeleted(task.isDeleted());
         return e;

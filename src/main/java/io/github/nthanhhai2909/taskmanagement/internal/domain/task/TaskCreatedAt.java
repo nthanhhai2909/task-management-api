@@ -4,30 +4,28 @@ import io.github.nthanhhai2909.taskmanagement.internal.domain.TimeAt;
 import io.github.nthanhhai2909.taskmanagement.internal.domain.DomainException;
 
 import java.time.Instant;
-import java.time.LocalDateTime;
-import java.time.ZoneOffset;
 
 public class TaskCreatedAt extends TimeAt {
-    TaskCreatedAt(LocalDateTime time) {
+    TaskCreatedAt(Instant time) {
         super(time);
     }
 
-    public static TaskCreatedAt of(LocalDateTime time) {
+    public static TaskCreatedAt of(Instant time) {
         return new TaskCreatedAt(time);
     }
 
     public static TaskCreatedAt ofEpochMilli(long epochMilli) {
-        LocalDateTime time = LocalDateTime.ofInstant(Instant.ofEpochMilli(epochMilli), ZoneOffset.UTC);
+        Instant time = Instant.ofEpochMilli(epochMilli);
         return new TaskCreatedAt(time);
     }
 
     public static TaskCreatedAt ofEpochSecond(long epochSecond) {
-        LocalDateTime time = LocalDateTime.ofInstant(Instant.ofEpochSecond(epochSecond), ZoneOffset.UTC);
+        Instant time = Instant.ofEpochSecond(epochSecond);
         return new TaskCreatedAt(time);
     }
 
     public static TaskCreatedAt now() {
-        return new TaskCreatedAt(LocalDateTime.now());
+        return new TaskCreatedAt(Instant.now());
     }
 
     @Override

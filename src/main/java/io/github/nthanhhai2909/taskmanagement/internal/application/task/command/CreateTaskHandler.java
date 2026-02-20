@@ -20,7 +20,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import java.time.LocalDateTime;
+import java.time.Instant;
 import java.util.Collections;
 public class CreateTaskHandler {
     private final TaskRepository taskRepository;
@@ -93,7 +93,7 @@ public class CreateTaskHandler {
         private String assignee;
         private String priority;
         private String status;
-        private LocalDateTime dueDate;
+        private Instant dueDate;
     }
 
     @NoArgsConstructor

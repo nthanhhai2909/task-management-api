@@ -10,7 +10,7 @@ import org.junit.jupiter.api.Test;
 import io.github.nthanhhai2909.taskmanagement.internal.domain.task.Task;
 import io.github.nthanhhai2909.taskmanagement.internal.domain.task.TaskID;
 
-import java.time.LocalDateTime;
+import java.time.Instant;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -60,7 +60,7 @@ class CreateTaskHandlerTest {
                 .assignee("user2")
                 .priority("HIGH")
                 .status("TODO")
-                .dueDate(LocalDateTime.now().plusDays(1))
+                .dueDate(Instant.now().plusSeconds(86400))
                 .build();
 
         DomainRuleViolationException ex = assertThrows(DomainRuleViolationException.class,
@@ -77,7 +77,7 @@ class CreateTaskHandlerTest {
                 .assignee("user2")
                 .priority("INVALID")
                 .status("TODO")
-                .dueDate(LocalDateTime.now().plusDays(1))
+                .dueDate(Instant.now().plusSeconds(86400))
                 .build();
 
         DomainRuleViolationException ex = assertThrows(DomainRuleViolationException.class,
@@ -94,7 +94,7 @@ class CreateTaskHandlerTest {
                 .assignee("user2")
                 .priority("HIGH")
                 .status("TODO")
-                .dueDate(LocalDateTime.now().minusDays(1))
+                .dueDate(Instant.now().minusSeconds(86400))
                 .build();
 
         assertThrows(DomainRuleViolationException.class, () -> handler.execute(command));
@@ -109,7 +109,7 @@ class CreateTaskHandlerTest {
                 .assignee("user2")
                 .priority("HIGH")
                 .status("TODO")
-                .dueDate(LocalDateTime.now().plusDays(1))
+                .dueDate(Instant.now().plusSeconds(86400))
                 .build();
 
         CreateTaskHandler.Result result = assertDoesNotThrow(() -> handler.execute(command));

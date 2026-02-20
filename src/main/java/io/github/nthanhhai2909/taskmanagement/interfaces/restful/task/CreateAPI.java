@@ -17,7 +17,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.time.Instant;
-import java.time.ZoneOffset;
 
 @RestController
 @RequestMapping("/tasks")
@@ -43,7 +42,7 @@ public class CreateAPI {
                     req.getAssignee(),
                     req.getPriority(),
                     req.getStatus(),
-                    Instant.ofEpochMilli(req.getDueDate()).atZone(ZoneOffset.UTC).toLocalDateTime()
+                    Instant.ofEpochMilli(req.getDueDate())
             );
             CreateTaskHandler.Result result = this.createTaskHandler.execute(command);
             return ResponseEntity

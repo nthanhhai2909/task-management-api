@@ -1,22 +1,16 @@
 package io.github.nthanhhai2909.taskmanagement.internal.domain;
 
 import java.time.Instant;
-import java.time.LocalDateTime;
-import java.time.ZoneOffset;
 
 public class TimeAt implements ValueObject {
-    private final LocalDateTime time;
+    private final Instant time;
 
-    public TimeAt(LocalDateTime time) {
+    public TimeAt(Instant time) {
         this.time = time;
     }
 
-    public LocalDateTime time() {
-        return this.time;
-    }
-
     public Instant toInstant() {
-        return this.time == null ? null : this.time.toInstant(ZoneOffset.UTC);
+        return this.time;
     }
 
     public boolean isEmpty() {
@@ -28,19 +22,19 @@ public class TimeAt implements ValueObject {
     }
 
     public long toEpochMilli() {
-        return this.time.toInstant(java.time.ZoneOffset.UTC).toEpochMilli();
+        return this.time.toEpochMilli();
     }
 
     public long toEpochSecond() {
-        return this.time.toEpochSecond(java.time.ZoneOffset.UTC);
+        return this.time.getEpochSecond();
     }
 
     public boolean isEqual(TimeAt other) {
-        return this.time.isEqual(other.time);
+        return this.time.equals(other.time);
     }
 
     public boolean isNotEqual(TimeAt other) {
-        return !this.time.isEqual(other.time);
+        return !this.time.equals(other.time);
     }
 
     public boolean isBefore(TimeAt other) {
@@ -48,16 +42,16 @@ public class TimeAt implements ValueObject {
     }
 
     public boolean isEqualOrBefore(TimeAt other) {
-        return time.isEqual(other.time) || time.isBefore(other.time);
+        return time.equals(other.time) || time.isBefore(other.time);
     }
 
     public boolean isBeforeNow() {
-        return this.time.isBefore(LocalDateTime.now());
+        return this.time.isBefore(Instant.now());
     }
 
     public boolean isBeforeOrEqualNow() {
-        LocalDateTime now = LocalDateTime.now();
-        return this.time.isEqual(now) || this.time.isBefore(now);
+        Instant now = Instant.now();
+        return this.time.equals(now) || this.time.isBefore(now);
     }
 
     public boolean isAfter(TimeAt other) {
@@ -65,16 +59,16 @@ public class TimeAt implements ValueObject {
     }
 
     public boolean isEqualOrAfter(TimeAt other) {
-        return this.time.isEqual(other.time) || this.time.isAfter(other.time);
+        return this.time.equals(other.time) || this.time.isAfter(other.time);
     }
 
     public boolean isAfterNow() {
-        return this.time.isAfter(LocalDateTime.now());
+        return this.time.isAfter(Instant.now());
     }
 
     public boolean isAfterOrEqualNow() {
-        LocalDateTime now = LocalDateTime.now();
-        return this.time.isEqual(now) || this.time.isAfter(now);
+        Instant now = Instant.now();
+        return this.time.equals(now) || this.time.isAfter(now);
     }
 
 

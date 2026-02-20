@@ -1,11 +1,11 @@
 package io.github.nthanhhai2909.taskmanagement.internal.domain;
 
 public class ID {
-    protected final Long id;
+    protected final Long lid;
     protected final String sid;
 
-    protected ID(Long id, String sid) {
-        this.id = id;
+    protected ID(Long lid, String sid) {
+        this.lid = lid;
         this.sid = sid;
     }
 
@@ -13,8 +13,8 @@ public class ID {
         return new ID(id, sid);
     }
 
-    public Long id() {
-        return id;
+    public Long lid() {
+        return lid;
     }
 
     public String sid() {
@@ -26,7 +26,7 @@ public class ID {
     }
 
     public boolean isEmpty() {
-        return id == null;
+        return lid == null;
     }
 
     public boolean isNotEmpty() {
