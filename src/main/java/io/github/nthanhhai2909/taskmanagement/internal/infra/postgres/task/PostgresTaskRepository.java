@@ -16,10 +16,8 @@ public class PostgresTaskRepository implements TaskRepository {
     private final JdbcTemplate jdbcTemplate;
     private final TaskRecordMapper mapper;
 
-    // Chunk size for batch updates to avoid extremely large batches
     private static final int BATCH_SIZE = 500;
 
-    // Upsert SQL using Postgres ON CONFLICT on primary key (id)
     private static final String UPSERT_SQL =
             "INSERT INTO tasks (" +
                     "id, sid, title, description, created_by, created_at, " +
@@ -95,11 +93,10 @@ public class PostgresTaskRepository implements TaskRepository {
 
     @Override
     public Optional<Task> findById(TaskID id) {
-        if (id == null || (id.lid() == null && (id.sid() == null || id.sid().isEmpty()))) {
+        if (id == null || id.isEmpty()) {
             return Optional.empty();
         }
 
-        // prefer lookup by numeric id when available
         try {
             List<TaskRecord> results;
             if (id.lid() != null) {
@@ -107,7 +104,9 @@ public class PostgresTaskRepository implements TaskRepository {
             } else {
                 results = jdbcTemplate.query(SELECT_BY_SID_SQL, mapper, id.sid());
             }
-            if (results.isEmpty()) return Optional.empty();
+            if (results.isEmpty()) {
+                return Optional.empty();
+            }
             return Optional.ofNullable(mapper.toDomain(results.get(0)));
         } catch (Exception ex) {
             return Optional.empty();

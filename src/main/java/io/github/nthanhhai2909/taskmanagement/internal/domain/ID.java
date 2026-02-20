@@ -26,7 +26,7 @@ public class ID {
     }
 
     public boolean isEmpty() {
-        return lid == null;
+        return lid == null && sid == null;
     }
 
     public boolean isNotEmpty() {
