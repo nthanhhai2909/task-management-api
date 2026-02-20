@@ -4,7 +4,7 @@ spring:
   datasource:
     url: jdbc:postgresql://localhost:5432/task_management
     username: ${DB_USERNAME:admin}
-    password: ${DB_PASSWORD}
+    password: ${DB_PASSWORD:P@ssw0rd123}
     hikari:
       maximum-pool-size: 10       # default: 10
       minimum-idle: 5             # default: same as max

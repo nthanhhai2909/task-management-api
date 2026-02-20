@@ -46,7 +46,7 @@ public class CreateTaskHandler {
     public Result execute(Command command) {
         try {
             if (command == null) {
-                throw new DomainRuleViolationException("command_required", "Command must not be null");
+                throw new DomainRuleViolationException(400001, "Command must not be null");
             }
 
             // generate id pair (numeric + sid) from infra
