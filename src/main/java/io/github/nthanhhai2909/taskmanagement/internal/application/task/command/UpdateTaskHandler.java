@@ -16,10 +16,10 @@ import java.util.Collections;
 import java.util.Optional;
 
 public class UpdateTaskHandler {
-    private final TaskRepository taskRepository;
+    private final TaskCommandRepository taskCommandRepository;
 
-    public UpdateTaskHandler(TaskRepository taskRepository) {
-        this.taskRepository = taskRepository;
+    public UpdateTaskHandler(TaskCommandRepository taskCommandRepository) {
+        this.taskCommandRepository = taskCommandRepository;
     }
 
     public Result execute(Command command) {
@@ -28,7 +28,7 @@ public class UpdateTaskHandler {
                 throw new DomainRuleViolationException(400001, "sid_required");
             }
 
-            Optional<Task> existingOpt = taskRepository.findById(TaskID.of(command.getSid()));
+            Optional<Task> existingOpt = taskCommandRepository.findById(TaskID.of(command.getSid()));
             if (existingOpt.isEmpty()) {
                 return null;
             }
@@ -63,7 +63,7 @@ public class UpdateTaskHandler {
             existing.update(domainCmd);
 
             // Persist changes (aggregate has new version and events)
-            this.taskRepository.save(Collections.singletonList(existing));
+            this.taskCommandRepository.save(Collections.singletonList(existing));
 
             return Result.builder()
                     .id(existing.id())

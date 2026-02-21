@@ -6,7 +6,7 @@ import io.github.nthanhhai2909.taskmanagement.internal.domain.task.TaskID;
 import java.util.List;
 import java.util.Optional;
 
-public interface TaskRepository {
+public interface TaskCommandRepository {
     void save(List<Task> tasks);
 
     Optional<Task> findById(TaskID id);

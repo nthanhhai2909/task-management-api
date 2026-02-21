@@ -23,16 +23,16 @@ import lombok.NoArgsConstructor;
 import java.time.Instant;
 import java.util.Collections;
 public class CreateTaskHandler {
-    private final TaskRepository taskRepository;
+    private final TaskCommandRepository taskCommandRepository;
     private final TransactionManager tx;
     private final IDGenerator idGenerator;
 
     public CreateTaskHandler(
-            TaskRepository taskRepository,
+            TaskCommandRepository taskCommandRepository,
             TransactionManager tx,
             IDGenerator idGenerator
     ) {
-        this.taskRepository = taskRepository;
+        this.taskCommandRepository = taskCommandRepository;
         this.tx = tx;
         this.idGenerator = idGenerator;
     }
@@ -64,7 +64,7 @@ public class CreateTaskHandler {
                     .dueDate(TaskDueDate.of(command.getDueDate()))
                     .build();
 
-            this.tx.required(() -> this.taskRepository.save(Collections.singletonList(task)));
+            this.tx.required(() -> this.taskCommandRepository.save(Collections.singletonList(task)));
 
             return Result.builder()
                     .id(task.id())

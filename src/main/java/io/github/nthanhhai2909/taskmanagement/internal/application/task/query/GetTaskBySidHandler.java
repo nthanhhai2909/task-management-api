@@ -1,6 +1,6 @@
 package io.github.nthanhhai2909.taskmanagement.internal.application.task.query;
 
-import io.github.nthanhhai2909.taskmanagement.internal.application.task.command.TaskRepository;
+import io.github.nthanhhai2909.taskmanagement.internal.application.task.command.TaskCommandRepository;
 import io.github.nthanhhai2909.taskmanagement.internal.domain.task.Task;
 import io.github.nthanhhai2909.taskmanagement.internal.domain.task.TaskID;
 import io.github.nthanhhai2909.taskmanagement.internal.domain.task.TaskCreatedAt;
@@ -20,10 +20,10 @@ import org.apache.commons.lang3.StringUtils;
 import java.util.Optional;
 
 public class GetTaskBySidHandler {
-    private final TaskRepository taskRepository;
+    private final TaskQueryRepository taskQueryRepository;
 
-    public GetTaskBySidHandler(TaskRepository taskRepository) {
-        this.taskRepository = taskRepository;
+    public GetTaskBySidHandler(TaskQueryRepository taskQueryRepository) {
+        this.taskQueryRepository = taskQueryRepository;
     }
 
     public Result execute(String sid) {
@@ -31,7 +31,7 @@ public class GetTaskBySidHandler {
             throw new IllegalArgumentException("sid_required");
         }
 
-        Optional<Task> taskOpt = taskRepository.findById(TaskID.of(sid));
+        Optional<Task> taskOpt = taskQueryRepository.findById(TaskID.of(sid));
         if (taskOpt.isEmpty()) {
             return null;
         }

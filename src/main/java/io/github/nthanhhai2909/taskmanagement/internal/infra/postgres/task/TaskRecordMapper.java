@@ -17,8 +17,10 @@ import java.sql.SQLException;
 import java.time.Instant;
 
 public class TaskRecordMapper implements RowMapper<TaskRecord> {
+    private static final TaskRecordMapper INSTANCE = new TaskRecordMapper();
 
-    public TaskRecordMapper() {
+    public static TaskRecordMapper getInstance() {
+        return INSTANCE;
     }
 
     public TaskRecord toRecord(Task task) {

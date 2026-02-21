@@ -1,21 +1,16 @@
 package io.github.nthanhhai2909.taskmanagement.internal.infra.postgres.task;
 
-import io.github.nthanhhai2909.taskmanagement.internal.application.task.command.TaskRepository;
 import io.github.nthanhhai2909.taskmanagement.internal.domain.task.Task;
-import io.github.nthanhhai2909.taskmanagement.internal.domain.task.TaskID;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.util.CollectionUtils;
 
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
-public class PostgresTaskRepository implements TaskRepository {
-
+public class PostgresTaskSaveRepository {
     private final JdbcTemplate jdbcTemplate;
     private final TaskRecordMapper mapper;
-
     private static final int BATCH_SIZE = 500;
 
     private static final String UPSERT_SQL =
@@ -36,26 +31,11 @@ public class PostgresTaskRepository implements TaskRepository {
                     "version = EXCLUDED.version, " +
                     "deleted = EXCLUDED.deleted";
 
-    private static final String SELECT_BY_ID_SQL =
-            "SELECT " +
-                    "id, sid, title, description, created_by, created_at, " +
-                    "assignee, priority, status, due_date, version, deleted " +
-                    "FROM tasks " +
-                    "WHERE id = ?";
-
-    private static final String SELECT_BY_SID_SQL =
-            "SELECT " +
-                    "id, sid, title, description, created_by, created_at, " +
-                    "assignee, priority, status, due_date, version, deleted " +
-                    "FROM tasks " +
-                    "WHERE sid = ?";
-
-    public PostgresTaskRepository(JdbcTemplate jdbcTemplate, TaskRecordMapper mapper) {
+    public PostgresTaskSaveRepository(JdbcTemplate jdbcTemplate, TaskRecordMapper mapper) {
         this.jdbcTemplate = jdbcTemplate;
         this.mapper = mapper;
     }
 
-    @Override
     public void save(List<Task> tasks) {
         if (CollectionUtils.isEmpty(tasks)) {
             return;
@@ -88,28 +68,6 @@ public class PostgresTaskRepository implements TaskRepository {
             int end = Math.min(batchArgs.size(), i + BATCH_SIZE);
             List<Object[]> chunk = batchArgs.subList(i, end);
             jdbcTemplate.batchUpdate(UPSERT_SQL, chunk);
-        }
-    }
-
-    @Override
-    public Optional<Task> findById(TaskID id) {
-        if (id == null || id.isEmpty()) {
-            return Optional.empty();
-        }
-
-        try {
-            List<TaskRecord> results;
-            if (id.lid() != null) {
-                results = jdbcTemplate.query(SELECT_BY_ID_SQL, mapper, id.lid());
-            } else {
-                results = jdbcTemplate.query(SELECT_BY_SID_SQL, mapper, id.sid());
-            }
-            if (results.isEmpty()) {
-                return Optional.empty();
-            }
-            return Optional.ofNullable(mapper.toDomain(results.get(0)));
-        } catch (Exception ex) {
-            return Optional.empty();
         }
     }
 }

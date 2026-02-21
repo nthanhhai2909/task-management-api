@@ -33,7 +33,7 @@ class CreateTaskHandlerTest {
             }
         };
 
-        TaskRepository repo = new TaskRepository() {
+        TaskCommandRepository repo = new TaskCommandRepository() {
             @Override
             public void save(List<Task> tasks) {}
 
