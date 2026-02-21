@@ -46,7 +46,7 @@ public class CreateTaskHandler {
     public Result execute(Command command) {
         try {
             if (command == null) {
-                throw new DomainRuleViolationException(400001, "Command must not be null");
+                throw new IllegalArgumentException("Command must not be null");
             }
 
             // generate id pair (numeric + sid) from infra
@@ -78,7 +78,7 @@ public class CreateTaskHandler {
                     .dueDate(task.dueDate())
                     .build();
         } catch (DomainException ex) {
-            throw new DomainRuleViolationException(ex.code(), ex.description());
+            throw new DomainRuleViolationException(ex.description());
         }
     }
 

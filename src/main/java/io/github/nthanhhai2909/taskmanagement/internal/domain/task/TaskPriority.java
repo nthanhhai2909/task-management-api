@@ -85,10 +85,7 @@ public final class TaskPriority implements ValueObject {
     @Override
     public void validate() throws DomainException {
         if (this.isUnknown()) {
-            throw new DomainException(
-                    Error.TASK_PRIORITY_REQUIRED.code(),
-                    Error.TASK_PRIORITY_REQUIRED.description()
-            );
+            throw new DomainException(Error.TASK_PRIORITY_REQUIRED.description());
         }
     }
 }

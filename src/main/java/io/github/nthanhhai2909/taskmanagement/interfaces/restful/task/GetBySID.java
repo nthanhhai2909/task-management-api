@@ -29,7 +29,7 @@ public class GetBySID {
     }
 
     @GetMapping("/{sid}")
-    public ResponseEntity<?> getBySid(@PathVariable String sid) {
+    public ResponseEntity<Object> getBySid(@PathVariable String sid) {
         try {
             Result res = handler.execute(sid);
             if (res == null) {
@@ -49,17 +49,16 @@ public class GetBySID {
             return ResponseEntity.ok(body);
         } catch (IllegalArgumentException e) {
             log.error("Invalid request for sid={}: {}", sid, e.getMessage());
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ErrorResponse.builder().code(400001).message(e.getMessage()).build());
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ErrorResponse.from(e));
         } catch (DomainRuleViolationException e) {
             log.error("Domain rule violation while querying task {}: {}", sid, e.getMessage());
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ErrorResponse.builder().code(e.code()).message(e.description()).build());
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ErrorResponse.from(e));
         } catch (Exception e) {
             log.error("Unexpected error while querying task {}", sid, e);
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
 
-    // Response DTO for GET /tasks/{sid}
     @Builder
     @Getter
     @NoArgsConstructor

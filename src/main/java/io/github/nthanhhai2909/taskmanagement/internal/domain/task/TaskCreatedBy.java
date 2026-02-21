@@ -30,7 +30,7 @@ public class TaskCreatedBy implements ValueObject {
     @Override
     public void validate() throws DomainException {
         if (this.isEmpty()) {
-            throw new DomainException(Error.TASK_CREATED_BY_REQUIRED.code(), Error.TASK_CREATED_BY_REQUIRED.description());
+            throw new DomainException(Error.TASK_CREATED_BY_REQUIRED.description());
         }
     }
 }

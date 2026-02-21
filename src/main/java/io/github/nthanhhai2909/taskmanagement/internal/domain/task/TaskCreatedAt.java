@@ -31,11 +31,11 @@ public class TaskCreatedAt extends TimeAt {
     @Override
     public void validate() throws DomainException {
         if (this.isEmpty()) {
-            throw new DomainException(Error.TASK_CREATED_AT_REQUIRED.code(), Error.TASK_CREATED_AT_REQUIRED.description());
+            throw new DomainException(Error.TASK_CREATED_AT_REQUIRED.description());
         }
 
         if (this.isAfterNow()) {
-            throw new DomainException(Error.TASK_CREATED_AT_MUST_NOT_BE_IN_FUTURE.code(), Error.TASK_CREATED_AT_MUST_NOT_BE_IN_FUTURE.description());
+            throw new DomainException(Error.TASK_CREATED_AT_MUST_NOT_BE_IN_FUTURE.description());
         }
     }
 }

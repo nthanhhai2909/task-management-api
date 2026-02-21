@@ -31,11 +31,11 @@ public class TaskTitle implements ValueObject {
     @Override
     public void validate() throws DomainException {
         if (StringUtils.isBlank(this.title)) {
-            throw new DomainException(Error.TASK_TITLE_REQUIRED.code(), Error.TASK_TITLE_REQUIRED.description());
+            throw new DomainException(Error.TASK_TITLE_REQUIRED.description());
         }
 
         if (this.title.length() > MAX_LEN) {
-            throw new DomainException(Error.TASK_TITLE_TOO_LONG.code(), String.format(Error.TASK_TITLE_TOO_LONG.description(), MAX_LEN, this.title.length()));
+            throw new DomainException(String.format(Error.TASK_TITLE_TOO_LONG.description(), MAX_LEN, this.title.length()));
         }
     }
 }

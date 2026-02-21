@@ -35,7 +35,7 @@ public class TaskDueDate extends TimeAt implements ValueObject {
             return;
         }
         if (this.isBeforeOrEqualNow()) {
-            throw new DomainException(Error.TASK_DUE_DATE_MUST_BE_IN_FUTURE.code(), Error.TASK_DUE_DATE_MUST_BE_IN_FUTURE.description());
+            throw new DomainException(Error.TASK_DUE_DATE_MUST_BE_IN_FUTURE.description());
         }
     }
 }

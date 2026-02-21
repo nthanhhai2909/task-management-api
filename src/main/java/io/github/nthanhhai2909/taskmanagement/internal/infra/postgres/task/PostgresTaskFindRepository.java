@@ -34,7 +34,7 @@ public class PostgresTaskFindRepository {
 
     public List<Task> list(ListTasksHandler.ListTasksQuery query, int offset, int limit, String sort) {
         if (limit > MAX_INFRA_PAGE_SIZE) {
-            throw new PageSizeExceededException(400300, String.format("Requested page size %d exceeds infra max %d", limit, MAX_INFRA_PAGE_SIZE));
+            throw new PageSizeExceededException(String.format("Requested page size %d exceeds infra max %d", limit, MAX_INFRA_PAGE_SIZE));
         }
 
         StringBuilder sb = new StringBuilder();

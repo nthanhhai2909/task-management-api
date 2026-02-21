@@ -38,7 +38,7 @@ public class TaskAssignee implements ValueObject {
     @Override
     public void validate() throws DomainException {
         if (StringUtils.isBlank(this.userId)) {
-            throw new DomainException(Error.TASK_ASSIGNEE_REQUIRED.code(), Error.TASK_ASSIGNEE_REQUIRED.description());
+            throw new DomainException(Error.TASK_ASSIGNEE_REQUIRED.description());
         }
     }
 }

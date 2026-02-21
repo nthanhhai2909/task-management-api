@@ -20,10 +20,7 @@ public class TaskID extends ID implements ValueObject {
     @Override
     public void validate() throws DomainException {
         if (this.isEmpty()) {
-            throw new DomainException(
-                    Error.TASK_ID_REQUIRED.code(),
-                    Error.TASK_ID_REQUIRED.description()
-            );
+            throw new DomainException(Error.TASK_ID_REQUIRED.description());
         }
     }
 }

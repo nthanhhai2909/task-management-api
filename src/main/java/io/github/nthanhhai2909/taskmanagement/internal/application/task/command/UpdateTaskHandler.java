@@ -25,7 +25,7 @@ public class UpdateTaskHandler {
     public Result execute(Command command) {
         try {
             if (command == null || StringUtils.isBlank(command.getSid())) {
-                throw new DomainRuleViolationException(400001, "sid_required");
+                throw new IllegalArgumentException("Command must not be null and must contain sid");
             }
 
             Optional<Task> existingOpt = taskCommandRepository.findById(TaskID.of(command.getSid()));
@@ -77,7 +77,7 @@ public class UpdateTaskHandler {
                     .dueDate(existing.dueDate())
                     .build();
         } catch (DomainException ex) {
-            throw new DomainRuleViolationException(ex.code(), ex.description());
+            throw new DomainRuleViolationException(ex.description());
         }
     }
 

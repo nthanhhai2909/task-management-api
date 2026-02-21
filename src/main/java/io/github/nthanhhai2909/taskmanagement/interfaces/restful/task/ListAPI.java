@@ -44,11 +44,11 @@ public class ListAPI {
     ) {
         try {
             if (page < 0) {
-                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ErrorResponse.builder().code(400201).message("page must be >= 0").build());
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ErrorResponse.badRequest("page must be >= 0"));
             }
 
             if (size <= 0 || size > API_MAX_PAGE_SIZE) {
-                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ErrorResponse.builder().code(400202).message("size must be between 1 and " + API_MAX_PAGE_SIZE).build());
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ErrorResponse.badRequest("size must be between 1 and " + API_MAX_PAGE_SIZE));
             }
 
             ListTasksHandler.ListTasksQuery q = ListTasksHandler.ListTasksQuery.builder()
@@ -88,10 +88,10 @@ public class ListAPI {
             return ResponseEntity.ok(response);
         } catch (DomainRuleViolationException e) {
             log.error("Domain rule violation while listing tasks: {}", e.getMessage());
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ErrorResponse.builder().code(e.code()).message(e.description()).build());
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ErrorResponse.from(e));
         } catch (PageSizeExceededException e) {
             log.error("Page size exceeded in infra while listing tasks: {}", e.getMessage());
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ErrorResponse.builder().code(e.code()).message(e.description()).build());
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ErrorResponse.from(e));
         } catch (Exception e) {
             log.error("Unexpected error while listing tasks", e);
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();

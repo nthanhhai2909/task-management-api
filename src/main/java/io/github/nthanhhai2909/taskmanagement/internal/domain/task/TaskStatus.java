@@ -99,10 +99,7 @@ public class TaskStatus implements ValueObject {
     @Override
     public void validate() throws DomainException {
         if (this.isUnknown()) {
-            throw new DomainException(
-                    Error.TASK_STATUS_REQUIRED.code(),
-                    Error.TASK_STATUS_REQUIRED.description()
-            );
+            throw new DomainException(Error.TASK_STATUS_REQUIRED.description());
         }
     }
 }

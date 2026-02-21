@@ -9,6 +9,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
@@ -27,7 +28,7 @@ public class UpdateAPI {
     }
 
     @PutMapping("/{sid}")
-    public ResponseEntity<?> updateBySid(@PathVariable("sid") String sid, @RequestBody UpdateRequest req) {
+    public ResponseEntity<Object> updateBySid(@PathVariable("sid") String sid, @RequestBody UpdateRequest req) {
         try {
             Command cmd = Command.builder()
                     .sid(sid)
@@ -58,27 +59,29 @@ public class UpdateAPI {
             return ResponseEntity.ok(body);
         } catch (IllegalArgumentException e) {
             log.error("Invalid update request for sid={}: {}", sid, e.getMessage());
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ErrorResponse.builder().code(400001).message(e.getMessage()).build());
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ErrorResponse.from(e));
         } catch (DomainRuleViolationException e) {
             log.error("Domain rule violation while updating task {}: {}", sid, e.getMessage());
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ErrorResponse.builder().code(e.code()).message(e.description()).build());
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ErrorResponse.from(e));
         } catch (Exception e) {
             log.error("Unexpected error while updating task {}", sid, e);
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
 
-    // Request DTO for update
+    @Setter
+    @Getter
+    @NoArgsConstructor
+    @AllArgsConstructor
     public static class UpdateRequest {
-        public String title;
-        public String description;
-        public String assignee;
-        public String priority;
-        public String status;
-        public java.time.Instant dueDate;
+        private String title;
+        private String description;
+        private String assignee;
+        private String priority;
+        private String status;
+        private java.time.Instant dueDate;
     }
 
-    // Response DTO for update
     @Builder
     @Getter
     @NoArgsConstructor

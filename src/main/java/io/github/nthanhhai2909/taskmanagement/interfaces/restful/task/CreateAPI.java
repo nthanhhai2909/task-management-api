@@ -33,7 +33,7 @@ public class CreateAPI {
      * @return 201 with {@link Response} on success, or 400 with {@link io.github.nthanhhai2909.taskmanagement.interfaces.restful.common.ErrorResponse} on domain rule violation
      */
     @PostMapping
-    public ResponseEntity<?> create(@RequestBody Request req) {
+    public ResponseEntity<Object> create(@RequestBody Request req) {
         try {
             CreateTaskHandler.Command command = new CreateTaskHandler.Command(
                     req.getTitle(),
@@ -60,12 +60,7 @@ public class CreateAPI {
                             .build());
         } catch (DomainRuleViolationException e) {
             log.error("Domain rule violation during task creation: {}", e.getMessage());
-            return ResponseEntity
-                    .status(HttpStatus.BAD_REQUEST)
-                    .body(ErrorResponse.builder()
-                            .code(e.code())
-                            .message(e.description())
-                            .build());
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ErrorResponse.from(e));
         }
     }
 

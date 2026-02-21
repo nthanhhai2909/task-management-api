@@ -2,7 +2,6 @@ package io.github.nthanhhai2909.taskmanagement.internal.application.task.query;
 
 import io.github.nthanhhai2909.taskmanagement.internal.application.exception.DomainRuleViolationException;
 import io.github.nthanhhai2909.taskmanagement.internal.domain.task.Task;
-import io.github.nthanhhai2909.taskmanagement.internal.domain.task.TaskPriority;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -21,21 +20,19 @@ public class ListTasksHandler {
 
     public ListTasksResult execute(ListTasksQuery q) {
         if (q == null) {
-            throw new DomainRuleViolationException(400100, "Query must not be null");
+            throw new IllegalArgumentException("Query must not be null");
         }
 
         int page = q.getPage();
         int size = q.getSize();
 
         if (size <= 0) {
-            throw new DomainRuleViolationException(400101, "Size must be positive");
+            throw new IllegalArgumentException("Size must be positive");
         }
 
         if (size > APP_MAX_PAGE_SIZE) {
-            throw new DomainRuleViolationException(400102, String.format("Requested size %d exceeds application max %d", size, APP_MAX_PAGE_SIZE));
+            throw new IllegalArgumentException(String.format("Requested size %d exceeds application max %d", size, APP_MAX_PAGE_SIZE));
         }
-
-        TaskPriority priority = TaskPriority.fromString(q.getPriority());
 
         int offset = page * size;
 

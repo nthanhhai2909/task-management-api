@@ -32,12 +32,12 @@ public class TaskDescription implements ValueObject {
     @Override
     public void validate() throws DomainException {
         if (this.isEmpty()) {
-            throw new DomainException(Error.TASK_DESCRIPTION_REQUIRED.code(), Error.TASK_DESCRIPTION_REQUIRED.description());
+            throw new DomainException(Error.TASK_DESCRIPTION_REQUIRED.description());
         }
 
         int actualLen = this.description.length();
         if (actualLen > MAX_LEN) {
-            throw new DomainException(Error.TASK_DESCRIPTION_TOO_LONG.code(), String.format(Error.TASK_DESCRIPTION_TOO_LONG.description(), MAX_LEN, actualLen));
+            throw new DomainException(String.format(Error.TASK_DESCRIPTION_TOO_LONG.description(), MAX_LEN, actualLen));
         }
     }
 }
